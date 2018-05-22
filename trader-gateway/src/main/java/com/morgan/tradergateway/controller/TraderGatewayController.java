@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import model.Order;
 
 @RestController
-public class TestController {
+public class TraderGatewayController {
 
     @GetMapping("/helloworld")
     public String helloworld() {
@@ -25,15 +25,15 @@ public class TestController {
      * 测试用例:1.ui点击orderBlotter按钮，触发GET，发送下拉框选择的brokerCompany，返回该brokerCompany的orderBlotter
      */
     @GetMapping("/orderBlotter/{BrokerCompany}")
-    public List<Order> getOrderBlotter(@PathVariable String BrokerCompany) throws Exception{
-        return Communication.getOrderBlotter(BrokerCompany);
+    public List<Order> getOrderBlotter(@PathVariable String brokerCompany) throws Exception{
+        return Communication.getOrderBlotter(brokerCompany);
     }
     /*
      * 测试用例：1.ui确定发送一个order后，将该order添加入下拉框选择的brokerCompany，返回添加成功后的order，
      * （同时需要实现一旦order成交后返回成交结果）
      */
-    @PostMapping("/addOrder")
-    public Order addOrder(@RequestBody Order order) throws Exception{
-    	return Communication.addOrder(order);
+    @PostMapping("/addOrder/{BrokerCompany}")
+    public Order addOrder(@PathVariable String brokerCompany,@RequestBody Order order) throws Exception{
+    	return Communication.addOrder(order,brokerCompany);
     }
 }

@@ -12,8 +12,7 @@ import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 import com.alibaba.fastjson.JSON;
-
-import model.Order;
+import com.morgan.tradergateway.model.Order;
 
 public class WSClient {
 

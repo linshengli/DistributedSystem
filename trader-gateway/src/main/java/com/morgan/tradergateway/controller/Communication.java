@@ -9,7 +9,7 @@ import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import model.Order;
+import com.morgan.tradergateway.model.Order;
 
 public class Communication {
 	// 用rmi实现

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: DistributedSystem
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: 陆宸
+Implementation-Vendor-Id: com.morgan
+Build-Jdk: 1.8.0_121
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/DistributedSystem
+Created-By: Maven Integration for Eclipse
+

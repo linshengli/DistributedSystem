@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-import com.morgan.tradergateway.controller.WSClient;
+import com.morgan.tradergateway.websocket.WSClient;
 
 @SpringBootApplication
 public class TraderGatewayApplication {

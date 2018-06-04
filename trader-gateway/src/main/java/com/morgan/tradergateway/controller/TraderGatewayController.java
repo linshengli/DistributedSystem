@@ -1,12 +1,9 @@
 package com.morgan.tradergateway.controller;
 
-import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Map;
-
-import javax.naming.NamingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +15,7 @@ import com.morgan.tradergateway.model.Order;
 import com.morgan.tradergateway.model.Trader;
 
 @RestController
+@CrossOrigin
 public class TraderGatewayController {
 
     @GetMapping("/helloworld")
@@ -27,9 +25,9 @@ public class TraderGatewayController {
     /*
      * 测试用例:1.ui点击orderBlotter按钮，触发GET，发送下拉框选择的brokerCompany，返回该brokerCompany的orderBlotter
      */
-    @GetMapping("/orderBlotter/{BrokerCompany}")
-    public List<Order> getOrderBlotter(@PathVariable String brokerCompany) throws Exception{
-        return Communication.getOrderBlotter(brokerCompany);
+    @GetMapping("/orderBlotter/{BrokerCompany}/{product}")
+    public List<Order> getOrderBlotter(@PathVariable String brokerCompany,@PathVariable String product) throws Exception{
+        return Communication.getOrderBlotter(brokerCompany,product);
     }
     /*
      * 测试用例：1.ui确定发送一个order后，将该order添加入下拉框选择的brokerCompany，返回添加成功后的order，
@@ -43,9 +41,13 @@ public class TraderGatewayController {
     @Autowired
     private TraderRepository traderRepository;
     
-    @PostMapping("/addPerson")
-    public String addPerson(@RequestBody Trader trader) {
-    	traderRepository.save(trader);
-    	return "success";
+    @PostMapping("/login")
+    public String login(@RequestBody Trader trader) {
+    	Trader trader_in_db = traderRepository.findByUsername(trader.getUsername());
+    	if(trader_in_db.getPassword().equals(trader.getPassword())){
+    		return "success";
+    	}else{
+    		return "fail";
+    	}
     }
 }

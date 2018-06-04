@@ -1,146 +1,153 @@
 package com.morgan.tradergateway.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Order implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private int id;
-	private String product;
-	private String period;
-	private String broker;
-	private int count;
-	private int price;
-	private int status;
-	private Date time;
-	private int type;
+    private int id;
+    private String product;
+    private String period;
+    private String broker;
+    private int count;
+    private float price;
+    private int status;
+    private Timestamp time;
+    private int type;
+    //init trader
+    private String itrader;
+    private String itradercom;
+    private char iside;
+    //finish trader
+    private String ftrader;
+    private String ftradercom;
+    private char fside;
+    
+    public int getId() {
+        return id;
+    }
 
-	private String itrader;
-	private String itradercom;
-	private char iside;
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	private String ftrader;
-	private String ftradercom;
-	private char fside;
+    public String getProduct() {
+        return product;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setProduct(String product) {
+        this.product = product;
+    }
+    
+    public String getPeriod() {
+        return period;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setPeriod(String period) {
+        this.period = period;
+    }
 
-	public String getProduct() {
-		return product;
-	}
+    public String getItrader() {
+        return itrader;
+    }
 
-	public void setProduct(String product) {
-		this.product = product;
-	}
+    public void setItrader(String itrader) {
+        this.itrader = itrader;
+    }
+    
+    public String getItradercom() {
+        return itradercom;
+    }
 
-	public String getPeriod() {
-		return period;
-	}
+    public void setItradercom(String itradercom) {
+        this.itradercom = itradercom;
+    }
+    
+    public char getIside() {
+        return iside;
+    }
 
-	public void setPeriod(String period) {
-		this.period = period;
-	}
+    public void setIside(char iside) {
+        this.iside = iside;
+    }
+    
+    public String getFtrader() {
+        return ftrader;
+    }
 
-	public String getItrader() {
-		return itrader;
-	}
+    public void setFtrader(String ftrader) {
+        this.ftrader = ftrader;
+    }
+    
+    public String getFtradercom() {
+        return ftradercom;
+    }
 
-	public void setITrader(String itrader) {
-		this.itrader = itrader;
-	}
+    public void setFtradercom(String ftradercom) {
+        this.ftradercom = ftradercom;
+    }
+    
+    public char getFside() {
+        return fside;
+    }
 
-	public String getItradercom() {
-		return itradercom;
-	}
+    public void setFside(char fside) {
+        this.fside = fside;
+    }
 
-	public void setITradercom(String itradercom) {
-		this.itradercom = itradercom;
-	}
+    public String getBroker() {
+        return broker;
+    }
 
-	public char getIside() {
-		return iside;
-	}
+    public void setBroker(String broker) {
+        this.broker = broker;
+    }
 
-	public void setIside(char iside) {
-		this.iside = iside;
-	}
+    public int getCount() {
+        return count;
+    }
 
-	public String getFtrader() {
-		return ftrader;
-	}
+    public void setCount(int count) {
+        this.count = count;
+    }
 
-	public void setFTrader(String ftrader) {
-		this.ftrader = ftrader;
-	}
+    public float getPrice() {
+        return price;
+    }
 
-	public String getFtradercom() {
-		return ftradercom;
-	}
+    public void setPrice(float price) {
+        this.price = price;
+    }
 
-	public void setFTradercom(String ftradercom) {
-		this.ftradercom = ftradercom;
-	}
+    public int getStatus() {
+        return status;
+    }
 
-	public char getFside() {
-		return fside;
-	}
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-	public void setFside(char fside) {
-		this.fside = fside;
-	}
+    public Timestamp getTime() {
+        return time;
+    }
 
-	public String getBroker() {
-		return broker;
-	}
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
 
-	public void setBroker(String broker) {
-		this.broker = broker;
-	}
+    public int getType() {
+        return type;
+    }
 
-	public int getCount() {
-		return count;
-	}
+    public void setType(int type) {
+        this.type = type;
+    }
+    
+    public Order(){
+    	super();
+    }
 
-	public void setCount(int count) {
-		this.count = count;
-	}
 
-	public int getPrice() {
-		return price;
-	}
 
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
+    
 }

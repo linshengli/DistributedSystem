@@ -8,4 +8,5 @@ import com.morgan.tradergateway.model.Trader;
 @Repository
 public interface TraderRepository extends JpaRepository<Trader, Integer> {
 	Trader findById(int id);
+	Trader findByUsername(String username);
 }

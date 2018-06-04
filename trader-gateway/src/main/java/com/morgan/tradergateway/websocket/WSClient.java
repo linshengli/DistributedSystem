@@ -1,5 +1,6 @@
-package com.morgan.tradergateway.controller;
+package com.morgan.tradergateway.websocket;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,12 +18,13 @@ import com.morgan.tradergateway.model.Order;
 public class WSClient {
 
 	public static WebSocketClient client;
-	public static WebSocketClient client_only_for_broadcast;
+	//public static WebSocketClient client_only_for_broadcast;
 
 	public static void main(String[] args)
 			throws URISyntaxException, NotYetConnectedException, UnsupportedEncodingException {
 		
-		client = new WebSocketClient(new URI("ws://localhost:8080/JavaWebSocket/websocket"), new Draft_6455()) {
+		String brokerCom = "SHFE";
+		client = new WebSocketClient(new URI("ws://192.168.43.96:8080/websocket/"+brokerCom+"/gold"), new Draft_6455()) {
 		
 			@Override
 			public void onOpen(ServerHandshake arg0) {
@@ -31,9 +33,16 @@ public class WSClient {
 
 			@Override
 			public void onMessage(String arg0) {
-				Order order = JSON.parseObject(arg0, Order.class);
-				System.out.println("收到消息" + arg0+order.getCount());
-				client_only_for_broadcast.send(arg0);
+				//Order order = JSON.parseObject(arg0, Order.class);
+				System.out.println("收到消息" + arg0);
+				//client_only_for_broadcast.send(arg0);
+				String product = "oil";
+				try {
+					WebSocketServer.sendInfo(brokerCom,product,arg0);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			@Override
@@ -57,8 +66,9 @@ public class WSClient {
 			}
 
 		};
-		
-		client_only_for_broadcast = new WebSocketClient(new URI("ws://localhost:8080/JavaWebSocket/websocket"), new Draft_6455()) {
+		client.connect();
+		/*
+		client_only_for_broadcast = new WebSocketClient(new URI("ws://localhost:8080/JavaWebSocket/websocket2"), new Draft_6455()) {
 			
 			@Override
 			public void onOpen(ServerHandshake arg0) {
@@ -92,8 +102,7 @@ public class WSClient {
 			}
 
 		};
-		client.connect();
-		client_only_for_broadcast.connect();
+		client_only_for_broadcast.connect();*/
 
 		while (!client.getReadyState().equals(READYSTATE.OPEN)) {
 			//System.out.println("还没有打开");

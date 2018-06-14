@@ -11,6 +11,7 @@ public class TraderGatewayApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		System.out.println("aaa");
 	}
 
 }

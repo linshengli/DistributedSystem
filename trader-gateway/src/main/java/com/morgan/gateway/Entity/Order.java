@@ -1,4 +1,4 @@
-package com.morgan.tradergateway.model;
+package com.morgan.gateway.Entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -10,7 +10,7 @@ public class Order implements Serializable{
     private String period;
     private String broker;
     private int count;
-    private float price;
+    private int price;
     private int status;
     private Timestamp time;
     private int type;
@@ -22,8 +22,17 @@ public class Order implements Serializable{
     private String ftrader;
     private String ftradercom;
     private char fside;
+    private Timestamp ftime;
     
-    public int getId() {
+    public Timestamp getFtime() {
+		return ftime;
+	}
+
+	public void setFtime(Timestamp ftime) {
+		this.ftime = ftime;
+	}
+
+	public int getId() {
         return id;
     }
 
@@ -111,11 +120,11 @@ public class Order implements Serializable{
         this.count = count;
     }
 
-    public float getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

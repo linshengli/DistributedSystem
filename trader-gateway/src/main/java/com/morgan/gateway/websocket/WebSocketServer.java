@@ -1,4 +1,4 @@
-package com.morgan.tradergateway.websocket;
+package com.morgan.gateway.websocket;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -22,8 +22,8 @@ import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 import com.alibaba.fastjson.JSON;
-import com.morgan.tradergateway.model.Depth;
-import com.morgan.tradergateway.model.Order;
+import com.morgan.gateway.Entity.Depth;
+import com.morgan.gateway.Entity.Order;
 
 /**
  * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
@@ -39,7 +39,7 @@ public class WebSocketServer {
     private static CopyOnWriteArraySet<WebSocketClient> webSocketClients = new CopyOnWriteArraySet<WebSocketClient>();
 
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识
-    private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
+    //private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
 
     private static Map<String,Map<String,CopyOnWriteArraySet<WebSocketServer>>> webSocketSets_brokerComp_product = new HashMap<String,Map<String,CopyOnWriteArraySet<WebSocketServer>>>();
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -57,6 +57,7 @@ public class WebSocketServer {
         	Map<String,CopyOnWriteArraySet<WebSocketServer>> webSockets_product = webSocketSets_brokerComp_product.get(brokerCom);
         	if(webSockets_product.containsKey(product)){
         		webSockets_product.get(product).add(this);
+                System.out.println("webSockets_product.containsKey(product)");
         	}else{
         		CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
         		webSocketSet.add(this);
@@ -68,12 +69,22 @@ public class WebSocketServer {
         	Map<String,CopyOnWriteArraySet<WebSocketServer>> webSocketSets_product = new HashMap<String,CopyOnWriteArraySet<WebSocketServer>>();
         	webSocketSets_product.put(product, webSocketSet);
         	webSocketSets_brokerComp_product.put(brokerCom, webSocketSets_product);
+            System.out.println("!webSocketSets_brokerComp_product.containsKey(brokerCom)");
         }
         //webSocketSet.add(this);     //加入set中
         addOnlineCount();           //在线数加1
         System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
         
-        WebSocketClient client = new WebSocketClient(new URI("ws://localhost:8080/websocket2"+brokerCom+product), new Draft_6455()) {
+        String[] productUrl = product.split(" ");
+        product = productUrl[0];
+        for(int i = 1;i<productUrl.length;i++){
+        	product += "%20"+productUrl[i];
+        }
+    	System.out.println(product);
+    	
+    	String port = "8080";
+    	if(brokerCom.equals("CDE"))port = "8081";
+        WebSocketClient client = new WebSocketClient(new URI("ws://192.168.43.96:"+port+"/websocket/"+brokerCom+"/"+product), new Draft_6455()) {
     		
 			@Override
 			public void onOpen(ServerHandshake arg0) {
@@ -82,9 +93,13 @@ public class WebSocketServer {
 
 			@Override
 			public void onMessage(String arg0) {
-				Depth depth = JSON.parseObject(arg0, Depth.class);
-				System.out.println("收到消息" + arg0+depth.getPrice());
+				//Order order = JSON.parseObject(arg0, Order.class);
+				System.out.println("收到消息" + arg0);
 				//client_only_for_broadcast.send(arg0);
+				Map maps = (Map)JSON.parse(arg0); 
+				String product = maps.get("product").toString();
+				System.out.println("product" + product);
+				System.out.println("brokerCom" + brokerCom);
 				try {
 					WebSocketServer.sendInfo(brokerCom,product,arg0);
 				} catch (IOException e) {
@@ -104,18 +119,10 @@ public class WebSocketServer {
 				System.out.println("链接已关闭");
 			}
 
-			@Override
-			public void onMessage(ByteBuffer bytes) {
-				try {
-					System.out.println(new String(bytes.array(), "utf-8"));
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-			}
-
 		};
+		client.connect();
+
 		while (!client.getReadyState().equals(READYSTATE.OPEN)) {
-			//System.out.println("还没有打开");
 		}
 		System.out.println("打开了");
         webSocketClients.add(client);
@@ -126,7 +133,14 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose(){
-        //webSocketSet.remove(this);  //从set中删除
+    	//从set中删除此web socket
+    	for (Map.Entry<String, Map<String,CopyOnWriteArraySet<WebSocketServer>>> entry_brokerComp_product : webSocketSets_brokerComp_product.entrySet()) {  
+    		Map<String,CopyOnWriteArraySet<WebSocketServer>> value_brokerComp_product = (Map<String,CopyOnWriteArraySet<WebSocketServer>>)entry_brokerComp_product.getValue();
+    		for (Map.Entry<String, CopyOnWriteArraySet<WebSocketServer>> entry_product : value_brokerComp_product.entrySet()) {  
+	 		    CopyOnWriteArraySet<WebSocketServer> value_product = (CopyOnWriteArraySet<WebSocketServer>)entry_product.getValue(); 
+	 		    if(value_product.contains(this))value_product.remove(this);  
+    	 	}  
+ 		}  
         subOnlineCount();           //在线数减1
         System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
     }
@@ -139,15 +153,6 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) {
         System.out.println("来自客户端的消息:" + message);
-        //群发消息
-        /*for(WebSocketServer item: webSocketSet){
-            try {
-                item.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-                continue;
-            }
-        }*/
     }
 
     /**

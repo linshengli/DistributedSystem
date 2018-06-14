@@ -1,4 +1,4 @@
-package com.morgan.tradergateway.websocket;
+package com.morgan.gateway.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.morgan.tradergateway.model;
+package com.morgan.gateway.Entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

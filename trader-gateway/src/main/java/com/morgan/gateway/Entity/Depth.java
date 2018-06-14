@@ -1,4 +1,4 @@
-package com.morgan.tradergateway.model;
+package com.morgan.gateway.Entity;
 
 import java.io.Serializable;
 
@@ -7,7 +7,16 @@ public class Depth implements Serializable {
     private float price;
     private int volume;
     private int dpid;
+    private String product;
 	
+	public String getProduct() {
+		return product;
+	}
+
+	public void setProduct(String product) {
+		this.product = product;
+	}
+
 	public void setLevel(int level){
 		this.level = level;
 	}
